@@ -1,4 +1,22 @@
-# MMED_Group_5_Measles
+# MMEDMeasles
+
+R package for a Stan model to model measles. 
+Originally created for the [MMED](https://www.ici3d.org/MMED/schedule/) 2025 workshop.
+
+## Installation
+
+1. Install the `devtools` R package:
+```
+install.packages("devtools")
+```
+2. Import the `devtools` package:
+```
+use("devtools")
+```
+3. Install this package:
+```
+install_github("Chydide/MMEDMeasles")
+```
 
 ## Contributing
 
