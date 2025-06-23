@@ -1,3 +1,6 @@
+#' Create SEIR model.
+#' 
+#' @param pop Population.
 simulate_SEIR <- function(pop = 1e6, R0 = 15, vaccine_coverage = 0.9, 
                           SIA_day = 60, SIA_coverage = 0.7, 
                           gamma = 1/7, sigma = 1/10, days = 180) {
@@ -22,4 +25,16 @@ simulate_SEIR <- function(pop = 1e6, R0 = 15, vaccine_coverage = 0.9,
   
   out <- ode(y = init, times = 0:days, func = SEIR, parms = NULL)
   as.data.frame(out)
+}
+
+#' Add together two numbers
+#' 
+#' @param x A number.
+#' @param y A number.
+#' @returns A numeric vector.
+#' @examples
+#' add(1, 1)
+#' add(10, 1)
+add <- function(x, y) {
+  x + y
 }
