@@ -1,5 +1,6 @@
 #' Create SEIR model.
 #' 
+#' @export
 #' @param pop Population.
 simulate_SEIR <- function(pop = 1e6, R0 = 15, vaccine_coverage = 0.9, 
                           SIA_day = 60, SIA_coverage = 0.7, 
@@ -29,6 +30,7 @@ simulate_SEIR <- function(pop = 1e6, R0 = 15, vaccine_coverage = 0.9,
 
 #' Add together two numbers
 #' 
+#' @export
 #' @param x A number.
 #' @param y A number.
 #' @returns A numeric vector.
