@@ -2,7 +2,9 @@
 
 ## Contributing
 
-1. Install the devtools package: `install.packages("devtools")`.
+1. Install the following R packages using `install.packages("<package name>")`:
+    - `rstan`,
+    - `devtools`.
 2. Make changes.
 3. Run `use('devtools')`.
 4. Run `load_all()` and test your changes.
