@@ -43,7 +43,7 @@ install_github("Chydide/MMEDMeasles")
 
 
 
-##🦠 SIR Model with Routine + SIA Vaccination
+## 🦠 SIR Model with Routine + SIA Vaccination
 
         +-----------+
         |           |
