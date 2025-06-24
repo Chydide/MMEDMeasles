@@ -2,6 +2,7 @@
 
 export(add)
 export(lm_stan)
+export(measles_stan)
 export(simulate_SEIR)
 import(Rcpp)
 import(methods)
