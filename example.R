@@ -2,15 +2,20 @@ library(dplyr)
 
 #source("measles_stan.R")
 
-# Example of running the model
+# Example of running the model ----
 data <- list(
-  n_observations = 3,
+  n_observations = 5,
   total_population = 100,
-  vaccinated = c(20, 30, 40)
+  vaccinated = c(20, 30, 20, 0, 0)
 )
 fit <- measles_stan(data, chains=1, iter = 20, refresh = 5)
 fit
 
+# Get the force of vaccinations
+force_of_vaccinations <- extract(fit, pars = "force_of_vaccination")[[1]][5,]
+force_of_vaccinations
+
+# Fake data -----
 # Generate fake data from the model by setting run_estimation = 0
 data2 <- list(
   n_observations = 3,
@@ -34,6 +39,8 @@ View(summary_tbl)
 draw <- 5
 vaccinated_sim <- extract(sim_out, pars = "vaccinated_sim")[[1]][draw,]
 vaccinated_sim
+
+# TODO: Plot
 
 # Get the inferred force_of_vaccination[] parameters.
 true_force_of_vaccinations <- extract(sim_out, pars = "force_of_vaccination")[[1]][draw,]

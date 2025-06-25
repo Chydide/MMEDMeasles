@@ -1,3 +1,6 @@
+///
+// One particular age group.
+///
 // The input data.
 data {
   int<lower=0> n_observations;
