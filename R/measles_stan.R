@@ -9,10 +9,6 @@ measles_stan <- function(
     data,
     ...)
 {
-  standata <- list(
-    n_observations = length(data), 
-    n_cohorts = length(data[1]),
-  )
-  out <- rstan::sampling(stanmodels$lm, data = standata, ...)
+  out <- rstan::sampling(stanmodels$measles, data = data, ...)
   return(out)
 }

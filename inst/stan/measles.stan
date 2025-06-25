@@ -9,10 +9,10 @@
 data {
   int<lower=0> n_cohorts;
   int<lower=0> n_observations;
-  array[n_cohorts, n_observations] int age;
-  array[n_cohorts, n_observations] int vaccine_status;
-  array[n_cohorts, n_observations] int sample_size;
-  array[n_cohorts, n_observations] int population_size;
+  array[n_observations, n_cohorts] int age;
+  array[n_observations, n_cohorts] int vaccine_status;
+  array[n_observations, n_cohorts] int sample_size;
+  array[n_observations, n_cohorts] int population_size;
 }
 
 // The parameters accepted by the model.
