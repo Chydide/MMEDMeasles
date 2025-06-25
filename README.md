@@ -24,11 +24,13 @@ install_github("Chydide/MMEDMeasles")
     - `rstan`,
     - `devtools`.
 2. Make changes.
-3. Run `use('devtools')`.
-4. Run `load_all()` and test your changes.
-5. `install.packages("../MMEDMeasles", repos = NULL, type = "source")`
-6. [Document](https://r-pkgs.org/man.html) your changes.
-7. Run `devtools::document()` to update the Roxygen documentation.
+3. Run `pkgbuild::compile_dll()`.
+4. Run `use('devtools')`.
+5. Run `load_all()` and test your changes.
+6. `install.packages("../MMEDMeasles", repos = NULL, type = "source")`
+7. [Document](https://r-pkgs.org/man.html) your changes.
+8. Run `devtools::document()` to update the Roxygen documentation.
+9. If a Stan model isn't being reloaded, try `rm src/MMEDMeasles.so src/RcppExports.o src/stanExports_lm.o` and then rerunning the commands above.
 
 
 ## 🧪 Compartments

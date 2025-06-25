@@ -27,59 +27,25 @@ namespace model_lm_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 40> locations_array__ =
+static constexpr std::array<const char*, 10> locations_array__ =
   {" (found before start of program)",
-  " (in 'lm', line 18, column 2 to column 29)",
-  " (in 'lm', line 19, column 2 to column 28)",
-  " (in 'lm', line 20, column 2 to column 27)",
-  " (in 'lm', line 24, column 8 to column 22)",
-  " (in 'lm', line 24, column 24 to column 33)",
-  " (in 'lm', line 24, column 2 to column 52)",
-  " (in 'lm', line 25, column 8 to column 22)",
-  " (in 'lm', line 25, column 24 to column 33)",
-  " (in 'lm', line 25, column 2 to column 46)",
-  " (in 'lm', line 26, column 8 to column 22)",
-  " (in 'lm', line 26, column 24 to column 33)",
-  " (in 'lm', line 26, column 2 to column 46)",
-  " (in 'lm', line 29, column 4 to column 78)",
-  " (in 'lm', line 30, column 4 to column 121)",
-  " (in 'lm', line 28, column 25 to line 31, column 3)",
-  " (in 'lm', line 28, column 2 to line 31, column 3)",
-  " (in 'lm', line 35, column 6 to column 105)",
-  " (in 'lm', line 36, column 6 to column 146)",
-  " (in 'lm', line 34, column 27 to line 37, column 5)",
-  " (in 'lm', line 34, column 4 to line 37, column 5)",
-  " (in 'lm', line 33, column 30 to line 38, column 3)",
-  " (in 'lm', line 33, column 2 to line 38, column 3)",
-  " (in 'lm', line 9, column 2 to column 25)",
-  " (in 'lm', line 10, column 2 to column 30)",
-  " (in 'lm', line 11, column 8 to column 17)",
-  " (in 'lm', line 11, column 19 to column 33)",
-  " (in 'lm', line 11, column 2 to column 43)",
-  " (in 'lm', line 12, column 8 to column 17)",
-  " (in 'lm', line 12, column 19 to column 33)",
-  " (in 'lm', line 12, column 2 to column 54)",
-  " (in 'lm', line 13, column 8 to column 17)",
-  " (in 'lm', line 13, column 19 to column 33)",
-  " (in 'lm', line 13, column 2 to column 51)",
-  " (in 'lm', line 14, column 8 to column 17)",
-  " (in 'lm', line 14, column 19 to column 33)",
-  " (in 'lm', line 14, column 2 to column 55)",
-  " (in 'lm', line 18, column 9 to column 20)",
-  " (in 'lm', line 19, column 9 to column 20)",
-  " (in 'lm', line 20, column 9 to column 20)"};
+  " (in 'lm', line 7, column 2 to column 17)",
+  " (in 'lm', line 8, column 2 to column 12)",
+  " (in 'lm', line 9, column 2 to column 22)",
+  " (in 'lm', line 13, column 2 to column 42)",
+  " (in 'lm', line 2, column 2 to column 17)",
+  " (in 'lm', line 3, column 9 to column 10)",
+  " (in 'lm', line 3, column 2 to column 14)",
+  " (in 'lm', line 4, column 9 to column 10)",
+  " (in 'lm', line 4, column 2 to column 14)"};
 #include <stan_meta_header.hpp>
 class model_lm final : public model_base_crtp<model_lm> {
 private:
-  int n_cohorts;
-  int n_observations;
-  std::vector<std::vector<int>> age;
-  std::vector<std::vector<int>> vaccine_status;
-  std::vector<std::vector<int>> sample_size;
-  std::vector<std::vector<int>> population_size;
-  int lambda_1dim__;
-  int alpha_1dim__;
-  int beta_1dim__;
+  int N;
+  Eigen::Matrix<double,-1,1> x_data__;
+  Eigen::Matrix<double,-1,1> y_data__;
+  Eigen::Map<Eigen::Matrix<double,-1,1>> x{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,1>> y{nullptr, 0};
 public:
   ~model_lm() {}
   model_lm(stan::io::var_context& context__, unsigned int random_seed__ = 0,
@@ -99,178 +65,64 @@ public:
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 23;
-      context__.validate_dims("data initialization", "n_cohorts", "int",
+      current_statement__ = 5;
+      context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
-      n_cohorts = std::numeric_limits<int>::min();
-      current_statement__ = 23;
-      n_cohorts = context__.vals_i("n_cohorts")[(1 - 1)];
-      current_statement__ = 23;
-      stan::math::check_greater_or_equal(function__, "n_cohorts", n_cohorts,
-        0);
-      current_statement__ = 24;
-      context__.validate_dims("data initialization", "n_observations", "int",
-        std::vector<size_t>{});
-      n_observations = std::numeric_limits<int>::min();
-      current_statement__ = 24;
-      n_observations = context__.vals_i("n_observations")[(1 - 1)];
-      current_statement__ = 24;
-      stan::math::check_greater_or_equal(function__, "n_observations",
-        n_observations, 0);
-      current_statement__ = 25;
-      stan::math::validate_non_negative_index("age", "n_cohorts", n_cohorts);
-      current_statement__ = 26;
-      stan::math::validate_non_negative_index("age", "n_observations",
-        n_observations);
-      current_statement__ = 27;
-      context__.validate_dims("data initialization", "age", "int",
-        std::vector<size_t>{static_cast<size_t>(n_cohorts),
-          static_cast<size_t>(n_observations)});
-      age = std::vector<std::vector<int>>(n_cohorts,
-              std::vector<int>(n_observations,
-                std::numeric_limits<int>::min()));
+      N = std::numeric_limits<int>::min();
+      current_statement__ = 5;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 5;
+      stan::math::check_greater_or_equal(function__, "N", N, 1);
+      current_statement__ = 6;
+      stan::math::validate_non_negative_index("x", "N", N);
+      current_statement__ = 7;
+      context__.validate_dims("data initialization", "x", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      x_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
+                   std::numeric_limits<double>::quiet_NaN());
+      new (&x) Eigen::Map<Eigen::Matrix<double,-1,1>>(x_data__.data(), N);
       {
-        std::vector<int> age_flat__;
-        current_statement__ = 27;
-        age_flat__ = context__.vals_i("age");
-        current_statement__ = 27;
+        std::vector<local_scalar_t__> x_flat__;
+        current_statement__ = 7;
+        x_flat__ = context__.vals_r("x");
+        current_statement__ = 7;
         pos__ = 1;
-        current_statement__ = 27;
-        for (int sym1__ = 1; sym1__ <= n_observations; ++sym1__) {
-          current_statement__ = 27;
-          for (int sym2__ = 1; sym2__ <= n_cohorts; ++sym2__) {
-            current_statement__ = 27;
-            stan::model::assign(age, age_flat__[(pos__ - 1)],
-              "assigning variable age", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            current_statement__ = 27;
-            pos__ = (pos__ + 1);
-          }
+        current_statement__ = 7;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 7;
+          stan::model::assign(x, x_flat__[(pos__ - 1)],
+            "assigning variable x", stan::model::index_uni(sym1__));
+          current_statement__ = 7;
+          pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 28;
-      stan::math::validate_non_negative_index("vaccine_status", "n_cohorts",
-        n_cohorts);
-      current_statement__ = 29;
-      stan::math::validate_non_negative_index("vaccine_status",
-        "n_observations", n_observations);
-      current_statement__ = 30;
-      context__.validate_dims("data initialization", "vaccine_status", "int",
-        std::vector<size_t>{static_cast<size_t>(n_cohorts),
-          static_cast<size_t>(n_observations)});
-      vaccine_status = std::vector<std::vector<int>>(n_cohorts,
-                         std::vector<int>(n_observations,
-                           std::numeric_limits<int>::min()));
+      current_statement__ = 8;
+      stan::math::validate_non_negative_index("y", "N", N);
+      current_statement__ = 9;
+      context__.validate_dims("data initialization", "y", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
+                   std::numeric_limits<double>::quiet_NaN());
+      new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
       {
-        std::vector<int> vaccine_status_flat__;
-        current_statement__ = 30;
-        vaccine_status_flat__ = context__.vals_i("vaccine_status");
-        current_statement__ = 30;
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 9;
+        y_flat__ = context__.vals_r("y");
+        current_statement__ = 9;
         pos__ = 1;
-        current_statement__ = 30;
-        for (int sym1__ = 1; sym1__ <= n_observations; ++sym1__) {
-          current_statement__ = 30;
-          for (int sym2__ = 1; sym2__ <= n_cohorts; ++sym2__) {
-            current_statement__ = 30;
-            stan::model::assign(vaccine_status, vaccine_status_flat__[(pos__
-              - 1)], "assigning variable vaccine_status",
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
-            current_statement__ = 30;
-            pos__ = (pos__ + 1);
-          }
+        current_statement__ = 9;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 9;
+          stan::model::assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", stan::model::index_uni(sym1__));
+          current_statement__ = 9;
+          pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 31;
-      stan::math::validate_non_negative_index("sample_size", "n_cohorts",
-        n_cohorts);
-      current_statement__ = 32;
-      stan::math::validate_non_negative_index("sample_size",
-        "n_observations", n_observations);
-      current_statement__ = 33;
-      context__.validate_dims("data initialization", "sample_size", "int",
-        std::vector<size_t>{static_cast<size_t>(n_cohorts),
-          static_cast<size_t>(n_observations)});
-      sample_size = std::vector<std::vector<int>>(n_cohorts,
-                      std::vector<int>(n_observations,
-                        std::numeric_limits<int>::min()));
-      {
-        std::vector<int> sample_size_flat__;
-        current_statement__ = 33;
-        sample_size_flat__ = context__.vals_i("sample_size");
-        current_statement__ = 33;
-        pos__ = 1;
-        current_statement__ = 33;
-        for (int sym1__ = 1; sym1__ <= n_observations; ++sym1__) {
-          current_statement__ = 33;
-          for (int sym2__ = 1; sym2__ <= n_cohorts; ++sym2__) {
-            current_statement__ = 33;
-            stan::model::assign(sample_size, sample_size_flat__[(pos__ - 1)],
-              "assigning variable sample_size",
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
-            current_statement__ = 33;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      current_statement__ = 34;
-      stan::math::validate_non_negative_index("population_size", "n_cohorts",
-        n_cohorts);
-      current_statement__ = 35;
-      stan::math::validate_non_negative_index("population_size",
-        "n_observations", n_observations);
-      current_statement__ = 36;
-      context__.validate_dims("data initialization", "population_size",
-        "int",
-        std::vector<size_t>{static_cast<size_t>(n_cohorts),
-          static_cast<size_t>(n_observations)});
-      population_size = std::vector<std::vector<int>>(n_cohorts,
-                          std::vector<int>(n_observations,
-                            std::numeric_limits<int>::min()));
-      {
-        std::vector<int> population_size_flat__;
-        current_statement__ = 36;
-        population_size_flat__ = context__.vals_i("population_size");
-        current_statement__ = 36;
-        pos__ = 1;
-        current_statement__ = 36;
-        for (int sym1__ = 1; sym1__ <= n_observations; ++sym1__) {
-          current_statement__ = 36;
-          for (int sym2__ = 1; sym2__ <= n_cohorts; ++sym2__) {
-            current_statement__ = 36;
-            stan::model::assign(population_size,
-              population_size_flat__[(pos__ - 1)],
-              "assigning variable population_size",
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
-            current_statement__ = 36;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      current_statement__ = 37;
-      lambda_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 37;
-      lambda_1dim__ = (n_cohorts - 1);
-      current_statement__ = 37;
-      stan::math::validate_non_negative_index("lambda", "n_cohorts - 1",
-        lambda_1dim__);
-      current_statement__ = 38;
-      alpha_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 38;
-      alpha_1dim__ = (n_cohorts - 1);
-      current_statement__ = 38;
-      stan::math::validate_non_negative_index("alpha", "n_cohorts - 1",
-        alpha_1dim__);
-      current_statement__ = 39;
-      beta_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 39;
-      beta_1dim__ = (n_cohorts - 1);
-      current_statement__ = 39;
-      stan::math::validate_non_negative_index("beta", "n_cohorts - 1",
-        beta_1dim__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = lambda_1dim__ + alpha_1dim__ + beta_1dim__;
+    num_params_r__ = 1 + 1 + 1;
   }
   inline std::string model_name() const final {
     return "model_lm";
@@ -298,149 +150,21 @@ public:
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> lambda =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lambda_1dim__,
-          DUMMY_VAR__);
+      local_scalar_t__ intercept = DUMMY_VAR__;
       current_statement__ = 1;
-      lambda = in__.template read<
-                 Eigen::Matrix<local_scalar_t__,-1,1>>(lambda_1dim__);
-      Eigen::Matrix<local_scalar_t__,-1,1> alpha =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(alpha_1dim__,
-          DUMMY_VAR__);
+      intercept = in__.template read<local_scalar_t__>();
+      local_scalar_t__ beta = DUMMY_VAR__;
       current_statement__ = 2;
-      alpha = in__.template read<
-                Eigen::Matrix<local_scalar_t__,-1,1>>(alpha_1dim__);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(beta_1dim__,
-          DUMMY_VAR__);
+      beta = in__.template read<local_scalar_t__>();
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 3;
-      beta = in__.template read<
-               Eigen::Matrix<local_scalar_t__,-1,1>>(beta_1dim__);
+      sigma = in__.template read_constrain_lb<local_scalar_t__,
+                jacobian__>(0, lp__);
       {
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("delta_p_plus",
-          "n_observations", n_observations);
-        current_statement__ = 5;
-        stan::math::validate_non_negative_index("delta_p_plus", "n_cohorts",
-          n_cohorts);
-        std::vector<std::vector<int>> delta_p_plus =
-          std::vector<std::vector<int>>(n_observations,
-            std::vector<int>(n_cohorts, std::numeric_limits<int>::min()));
-        current_statement__ = 7;
-        stan::math::validate_non_negative_index("p_plus", "n_observations",
-          n_observations);
-        current_statement__ = 8;
-        stan::math::validate_non_negative_index("p_plus", "n_cohorts",
-          n_cohorts);
-        std::vector<std::vector<int>> p_plus =
-          std::vector<std::vector<int>>(n_observations,
-            std::vector<int>(n_cohorts, std::numeric_limits<int>::min()));
-        current_statement__ = 10;
-        stan::math::validate_non_negative_index("v_plus", "n_observations",
-          n_observations);
-        current_statement__ = 11;
-        stan::math::validate_non_negative_index("v_plus", "n_cohorts",
-          n_cohorts);
-        std::vector<std::vector<int>> v_plus =
-          std::vector<std::vector<int>>(n_observations,
-            std::vector<int>(n_cohorts, std::numeric_limits<int>::min()));
-        current_statement__ = 16;
-        for (int c = 1; c <= n_cohorts; ++c) {
-          current_statement__ = 13;
-          lp_accum__.add(stan::math::binomial_lpmf<propto__>(
-                           stan::model::rvalue(
-                             stan::model::rvalue(delta_p_plus,
-                               "delta_p_plus", stan::model::index_uni(1)),
-                             "delta_p_plus[1]", stan::model::index_uni(c)),
-                           stan::model::rvalue(
-                             stan::model::rvalue(population_size,
-                               "population_size", stan::model::index_uni(1)),
-                             "population_size[1]", stan::model::index_uni(c)),
-                           (1 -
-                           stan::math::exp(
-                             -stan::model::rvalue(lambda, "lambda",
-                                stan::model::index_uni(c))))));
-          current_statement__ = 14;
-          lp_accum__.add(stan::math::hypergeometric_lpmf<propto__>(
-                           stan::model::rvalue(
-                             stan::model::rvalue(v_plus, "v_plus",
-                               stan::model::index_uni(1)), "v_plus[1]",
-                             stan::model::index_uni(c)),
-                           stan::model::rvalue(
-                             stan::model::rvalue(sample_size, "sample_size",
-                               stan::model::index_uni(1)), "sample_size[1]",
-                             stan::model::index_uni(c)),
-                           stan::model::rvalue(
-                             stan::model::rvalue(vaccine_status,
-                               "vaccine_status", stan::model::index_uni(1)),
-                             "vaccine_status[1]", stan::model::index_uni(c)),
-                           (stan::model::rvalue(
-                              stan::model::rvalue(population_size,
-                                "population_size", stan::model::index_uni(1)),
-                              "population_size[1]", stan::model::index_uni(c))
-                           -
-                           stan::model::rvalue(
-                             stan::model::rvalue(vaccine_status,
-                               "vaccine_status", stan::model::index_uni(1)),
-                             "vaccine_status[1]", stan::model::index_uni(c)))));
-        }
-        current_statement__ = 22;
-        for (int t = 2; t <= n_observations; ++t) {
-          current_statement__ = 20;
-          for (int c = 1; c <= n_cohorts; ++c) {
-            current_statement__ = 17;
-            lp_accum__.add(stan::math::binomial_lpmf<propto__>(
-                             stan::model::rvalue(
-                               stan::model::rvalue(delta_p_plus,
-                                 "delta_p_plus", stan::model::index_uni(t)),
-                               "delta_p_plus[t]", stan::model::index_uni(c)),
-                             (stan::model::rvalue(
-                                stan::model::rvalue(population_size,
-                                  "population_size",
-                                  stan::model::index_uni((t - 1))),
-                                "population_size[(t - 1)]",
-                                stan::model::index_uni(c)) -
-                             stan::model::rvalue(
-                               stan::model::rvalue(delta_p_plus,
-                                 "delta_p_plus",
-                                 stan::model::index_uni((t - 1))),
-                               "delta_p_plus[(t - 1)]",
-                               stan::model::index_uni(c))), (1 -
-                             stan::math::exp(
-                               -stan::model::rvalue(lambda, "lambda",
-                                  stan::model::index_uni(c))))));
-            current_statement__ = 18;
-            lp_accum__.add(stan::math::hypergeometric_lpmf<propto__>(
-                             stan::model::rvalue(
-                               stan::model::rvalue(v_plus, "v_plus",
-                                 stan::model::index_uni(t)), "v_plus[t]",
-                               stan::model::index_uni(c)),
-                             stan::model::rvalue(
-                               stan::model::rvalue(sample_size,
-                                 "sample_size", stan::model::index_uni(t)),
-                               "sample_size[t]", stan::model::index_uni(c)),
-                             (stan::model::rvalue(
-                                stan::model::rvalue(vaccine_status,
-                                  "vaccine_status",
-                                  stan::model::index_uni((t - 1))),
-                                "vaccine_status[(t - 1)]",
-                                stan::model::index_uni(c)) +
-                             stan::model::rvalue(
-                               stan::model::rvalue(delta_p_plus,
-                                 "delta_p_plus", stan::model::index_uni(t)),
-                               "delta_p_plus[t]", stan::model::index_uni(c))),
-                             (stan::model::rvalue(
-                                stan::model::rvalue(population_size,
-                                  "population_size",
-                                  stan::model::index_uni(t)),
-                                "population_size[t]",
-                                stan::model::index_uni(c)) -
-                             stan::model::rvalue(
-                               stan::model::rvalue(vaccine_status,
-                                 "vaccine_status", stan::model::index_uni(t)),
-                               "vaccine_status[t]", stan::model::index_uni(c)))));
-          }
-        }
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
+                         stan::math::add(intercept,
+                           stan::math::multiply(beta, x)), sigma));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -479,27 +203,19 @@ public:
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> lambda =
-        Eigen::Matrix<double,-1,1>::Constant(lambda_1dim__,
-          std::numeric_limits<double>::quiet_NaN());
+      double intercept = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      lambda = in__.template read<
-                 Eigen::Matrix<local_scalar_t__,-1,1>>(lambda_1dim__);
-      Eigen::Matrix<double,-1,1> alpha =
-        Eigen::Matrix<double,-1,1>::Constant(alpha_1dim__,
-          std::numeric_limits<double>::quiet_NaN());
+      intercept = in__.template read<local_scalar_t__>();
+      double beta = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
-      alpha = in__.template read<
-                Eigen::Matrix<local_scalar_t__,-1,1>>(alpha_1dim__);
-      Eigen::Matrix<double,-1,1> beta =
-        Eigen::Matrix<double,-1,1>::Constant(beta_1dim__,
-          std::numeric_limits<double>::quiet_NaN());
+      beta = in__.template read<local_scalar_t__>();
+      double sigma = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
-      beta = in__.template read<
-               Eigen::Matrix<local_scalar_t__,-1,1>>(beta_1dim__);
-      out__.write(lambda);
-      out__.write(alpha);
+      sigma = in__.template read_constrain_lb<local_scalar_t__,
+                jacobian__>(0, lp__);
+      out__.write(intercept);
       out__.write(beta);
+      out__.write(sigma);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
@@ -528,30 +244,18 @@ public:
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__,-1,1> lambda =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lambda_1dim__,
-          DUMMY_VAR__);
+      local_scalar_t__ intercept = DUMMY_VAR__;
       current_statement__ = 1;
-      stan::model::assign(lambda,
-        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(lambda_1dim__),
-        "assigning variable lambda");
-      out__.write(lambda);
-      Eigen::Matrix<local_scalar_t__,-1,1> alpha =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(alpha_1dim__,
-          DUMMY_VAR__);
+      intercept = in__.read<local_scalar_t__>();
+      out__.write(intercept);
+      local_scalar_t__ beta = DUMMY_VAR__;
       current_statement__ = 2;
-      stan::model::assign(alpha,
-        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(alpha_1dim__),
-        "assigning variable alpha");
-      out__.write(alpha);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(beta_1dim__,
-          DUMMY_VAR__);
-      current_statement__ = 3;
-      stan::model::assign(beta,
-        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(beta_1dim__),
-        "assigning variable beta");
+      beta = in__.read<local_scalar_t__>();
       out__.write(beta);
+      local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 3;
+      sigma = in__.read<local_scalar_t__>();
+      out__.write_free_lb(0, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -568,73 +272,28 @@ public:
     (void) DUMMY_VAR__;
     try {
       current_statement__ = 1;
-      context__.validate_dims("parameter initialization", "lambda", "double",
-        std::vector<size_t>{static_cast<size_t>(lambda_1dim__)});
+      context__.validate_dims("parameter initialization", "intercept",
+        "double", std::vector<size_t>{});
       current_statement__ = 2;
-      context__.validate_dims("parameter initialization", "alpha", "double",
-        std::vector<size_t>{static_cast<size_t>(alpha_1dim__)});
-      current_statement__ = 3;
       context__.validate_dims("parameter initialization", "beta", "double",
-        std::vector<size_t>{static_cast<size_t>(beta_1dim__)});
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__,-1,1> lambda =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lambda_1dim__,
-          DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> lambda_flat__;
-        current_statement__ = 1;
-        lambda_flat__ = context__.vals_r("lambda");
-        current_statement__ = 1;
-        pos__ = 1;
-        current_statement__ = 1;
-        for (int sym1__ = 1; sym1__ <= lambda_1dim__; ++sym1__) {
-          current_statement__ = 1;
-          stan::model::assign(lambda, lambda_flat__[(pos__ - 1)],
-            "assigning variable lambda", stan::model::index_uni(sym1__));
-          current_statement__ = 1;
-          pos__ = (pos__ + 1);
-        }
-      }
-      out__.write(lambda);
-      Eigen::Matrix<local_scalar_t__,-1,1> alpha =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(alpha_1dim__,
-          DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> alpha_flat__;
-        current_statement__ = 2;
-        alpha_flat__ = context__.vals_r("alpha");
-        current_statement__ = 2;
-        pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= alpha_1dim__; ++sym1__) {
-          current_statement__ = 2;
-          stan::model::assign(alpha, alpha_flat__[(pos__ - 1)],
-            "assigning variable alpha", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
-          pos__ = (pos__ + 1);
-        }
-      }
-      out__.write(alpha);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(beta_1dim__,
-          DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 3;
-        beta_flat__ = context__.vals_r("beta");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= beta_1dim__; ++sym1__) {
-          current_statement__ = 3;
-          stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", stan::model::index_uni(sym1__));
-          current_statement__ = 3;
-          pos__ = (pos__ + 1);
-        }
-      }
+      local_scalar_t__ intercept = DUMMY_VAR__;
+      current_statement__ = 1;
+      intercept = context__.vals_r("intercept")[(1 - 1)];
+      out__.write(intercept);
+      local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 2;
+      beta = context__.vals_r("beta")[(1 - 1)];
       out__.write(beta);
+      local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 3;
+      sigma = context__.vals_r("sigma")[(1 - 1)];
+      out__.write_free_lb(0, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -643,7 +302,7 @@ public:
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"lambda", "alpha", "beta"};
+    names__ = std::vector<std::string>{"intercept", "beta", "sigma"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -651,11 +310,8 @@ public:
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(
-                                                                    lambda_1dim__)},
-                std::vector<size_t>{static_cast<size_t>(alpha_1dim__)},
-                std::vector<size_t>{static_cast<size_t>(beta_1dim__)}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+                std::vector<size_t>{}, std::vector<size_t>{}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -663,18 +319,9 @@ public:
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= lambda_1dim__; ++sym1__) {
-      param_names__.emplace_back(std::string() + "lambda" + '.' +
-        std::to_string(sym1__));
-    }
-    for (int sym1__ = 1; sym1__ <= alpha_1dim__; ++sym1__) {
-      param_names__.emplace_back(std::string() + "alpha" + '.' +
-        std::to_string(sym1__));
-    }
-    for (int sym1__ = 1; sym1__ <= beta_1dim__; ++sym1__) {
-      param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
-    }
+    param_names__.emplace_back(std::string() + "intercept");
+    param_names__.emplace_back(std::string() + "beta");
+    param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -682,26 +329,17 @@ public:
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= lambda_1dim__; ++sym1__) {
-      param_names__.emplace_back(std::string() + "lambda" + '.' +
-        std::to_string(sym1__));
-    }
-    for (int sym1__ = 1; sym1__ <= alpha_1dim__; ++sym1__) {
-      param_names__.emplace_back(std::string() + "alpha" + '.' +
-        std::to_string(sym1__));
-    }
-    for (int sym1__ = 1; sym1__ <= beta_1dim__; ++sym1__) {
-      param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
-    }
+    param_names__.emplace_back(std::string() + "intercept");
+    param_names__.emplace_back(std::string() + "beta");
+    param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"lambda\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(lambda_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(alpha_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_1dim__) + "},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"lambda\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(lambda_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(alpha_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_1dim__) + "},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -710,8 +348,7 @@ public:
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((lambda_1dim__ + alpha_1dim__) +
-      beta_1dim__);
+    const size_t num_params__ = ((1 + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -728,8 +365,7 @@ public:
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((lambda_1dim__ + alpha_1dim__) +
-      beta_1dim__);
+    const size_t num_params__ = ((1 + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
