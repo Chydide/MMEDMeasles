@@ -4,14 +4,12 @@
 \alias{measles_stan}
 \title{Models model}
 \usage{
-measles_stan(n_cohorts, n_observations, ...)
+measles_stan(data, ...)
 }
 \arguments{
+\item{data}{Data. TODO: add format.}
+
 \item{...}{Arguments passed to `rstan::sampling` (e.g. iter, chains).}
-
-\item{x}{Numeric vector of input values.}
-
-\item{y}{Numeric vector of output values.}
 }
 \value{
 An object of class `stanfit` returned by `rstan::sampling`
