@@ -1,6 +1,6 @@
 library(rstan)
 library(tidyverse)
-library(rstudioapi)  # for setting working directory in RStudio
+#library(rstudioapi)  # for setting working directory in RStudio
 
 # Set working directory to folder containing this script (RStudio only)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
@@ -46,7 +46,7 @@ fit <- sampling(
   warmup = 100,
   chains = 2,
   seed   = 123,
-  verbose = TRUE
+  #verbose = TRUE
 )
 
 # 5) Print summary and parameter names
@@ -58,6 +58,8 @@ cat("Stan parameters:\n", paste(param_names, collapse = ", "), "\n")
 plot(fit,
      pars    = param_names,
      plotfun = "trace")
+
+stan_dens(fit, pars="force_of_vaccination", separate_chains = T)
 
 # 7) Forest plot with 80% credible intervals
 stan_plot(fit,
